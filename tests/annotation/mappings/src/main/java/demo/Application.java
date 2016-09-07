@@ -67,6 +67,9 @@ public class Application {
 
 		@Value("${oauth.paths.check_token:/oauth/check_token}")
 		private String checkTokenPath = "/oauth/check_token";
+		
+		@Value("${oauth.paths.revoke:/oauth/revoke}")
+		private String revokePath = "/oauth/revoke";
 
 		@Value("${oauth.paths.authorize:/oauth/authorize}")
 		private String authorizePath = "/oauth/authorize";
@@ -94,6 +97,7 @@ public class Application {
 				.pathMapping("/oauth/confirm_access", confirmPath)
 				.pathMapping("/oauth/token", tokenPath)
 				.pathMapping("/oauth/check_token", checkTokenPath)
+				.pathMapping("/oauth/revoke", revokePath)
 				.pathMapping("/oauth/token_key", tokenKeyPath)
 				.pathMapping("/oauth/authorize", authorizePath);
 			// @formatter:on

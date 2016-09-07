@@ -32,6 +32,7 @@ import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCo
 import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping;
+import org.springframework.security.oauth2.provider.endpoint.RevokeTokenEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalEndpoint;
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
@@ -62,6 +63,7 @@ public class AuthorizationServerBeanDefinitionParser
 		String tokenEndpointUrl = element.getAttribute("token-endpoint-url");
 		String checkTokenUrl = element.getAttribute("check-token-endpoint-url");
 		String enableCheckToken = element.getAttribute("check-token-enabled");
+		String enableRevokeToken = element.getAttribute("revoke-token-enabled");
 		String authorizationEndpointUrl = element
 				.getAttribute("authorization-endpoint-url");
 		String tokenGranterRef = element.getAttribute("token-granter-ref");
@@ -307,6 +309,15 @@ public class AuthorizationServerBeanDefinitionParser
 			parserContext.getRegistry().registerBeanDefinition("oauth2CheckTokenEndpoint",
 					checkTokenEndpointBean.getBeanDefinition());
 		}
+		
+		if (StringUtils.hasText(enableRevokeToken) && enableRevokeToken.equals("true")) {
+			// configure the check token endpoint
+			BeanDefinitionBuilder revokeTokenEndpointBean = BeanDefinitionBuilder
+					.rootBeanDefinition(RevokeTokenEndpoint.class);
+			revokeTokenEndpointBean.addConstructorArgReference(tokenServicesRef);
+			parserContext.getRegistry().registerBeanDefinition("oauth2RevokeTokenEndpoint",
+					revokeTokenEndpointBean.getBeanDefinition());
+		}
 
 		// Register a handler mapping that can detect the auth server endpoints
 		BeanDefinitionBuilder handlerMappingBean = BeanDefinitionBuilder
@@ -329,6 +340,10 @@ public class AuthorizationServerBeanDefinitionParser
 			if (StringUtils.hasText(checkTokenUrl)) {
 				mappings.put("/oauth/check_token",
 						new TypedStringValue(checkTokenUrl, String.class));
+			}
+			if (StringUtils.hasText(revokeTokenUrl)) {
+				mappings.put("/oauth/revoke",
+						new TypedStringValue(revokeTokenUrl, String.class));
 			}
 			handlerMappingBean.addPropertyValue("mappings", mappings);
 		}

@@ -41,6 +41,7 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping;
+import org.springframework.security.oauth2.provider.endpoint.RevokeTokenEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.TokenKeyEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalEndpoint;
@@ -112,6 +113,13 @@ public class AuthorizationServerEndpointsConfiguration {
 		endpoint.setAccessTokenConverter(getEndpointsConfigurer().getAccessTokenConverter());
 		endpoint.setExceptionTranslator(exceptionTranslator());
 		return endpoint;
+	}
+
+	@Bean
+	public RevokeTokenEndpoint revokeTokenEndpoint() throws Exception {
+		RevokeTokenEndpoint revokeTokenEndpoint = new RevokeTokenEndpoint(getEndpointsConfigurer().getConsumerTokenServices(), getEndpointsConfigurer().getResourceServerTokenServices());
+		revokeTokenEndpoint.setExceptionTranslator(exceptionTranslator());
+		return revokeTokenEndpoint;
 	}
 
 	@Bean

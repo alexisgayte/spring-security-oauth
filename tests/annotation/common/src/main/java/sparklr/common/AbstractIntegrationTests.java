@@ -71,6 +71,8 @@ public abstract class AbstractIntegrationTests {
 	private static String globalCheckTokenPath;
 
 	private static String globalAuthorizePath;
+	
+	private static String globalRevokePath;
 
 	static {
 		if (new ClassPathResource("sample.jks").exists()) {
@@ -256,7 +258,12 @@ public abstract class AbstractIntegrationTests {
 	public void setCheckTokenPath(String tokenPath) {
 		globalCheckTokenPath = tokenPath;
 	}
-
+	
+	@Value("${oauth.paths.revoke:/oauth/revoke}")
+	public void setRevokePath(String revokePath) {
+		globalRevokePath = revokePath;
+	}
+	
 	@Value("${oauth.paths.authorize:/oauth/authorize}")
 	public void setAuthorizePath(String authorizePath) {
 		globalAuthorizePath = authorizePath;
@@ -272,6 +279,10 @@ public abstract class AbstractIntegrationTests {
 
 	public static String checkTokenPath() {
 		return globalCheckTokenPath;
+	}
+	
+	public static String revokePath() {
+		return globalRevokePath;
 	}
 
 	public static String authorizePath() {
