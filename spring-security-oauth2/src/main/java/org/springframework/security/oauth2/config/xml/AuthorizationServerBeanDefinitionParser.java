@@ -62,6 +62,7 @@ public class AuthorizationServerBeanDefinitionParser
 				.getAttribute("authorization-request-manager-ref");
 		String tokenEndpointUrl = element.getAttribute("token-endpoint-url");
 		String checkTokenUrl = element.getAttribute("check-token-endpoint-url");
+		String revokeTokenUrl = element.getAttribute("revoke-token-endpoint-url");
 		String enableCheckToken = element.getAttribute("check-token-enabled");
 		String enableRevokeToken = element.getAttribute("revoke-token-enabled");
 		String authorizationEndpointUrl = element
