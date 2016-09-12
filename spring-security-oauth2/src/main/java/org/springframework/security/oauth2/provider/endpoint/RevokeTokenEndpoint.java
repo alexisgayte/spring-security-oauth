@@ -20,6 +20,7 @@ import java.security.Principal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -32,8 +33,9 @@ import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * 
@@ -61,9 +63,10 @@ public class RevokeTokenEndpoint {
 		this.exceptionTranslator = exceptionTranslator;
 	}
 
-	@RequestMapping(value = "/oauth/revoke")
-	@ResponseBody
-	public boolean revokeToken(@RequestParam("token") String value, Principal principal) {
+	@RequestMapping(value = "/oauth/revoke", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void revokeToken(@RequestParam("token") final String value, 
+							Principal principal) {
 
 		if (!(principal instanceof OAuth2Authentication) 
 					|| !((OAuth2Authentication) principal).isAuthenticated() 
@@ -81,7 +84,7 @@ public class RevokeTokenEndpoint {
 			throw new InvalidTokenException("Token has expired");
 		}
 
-		return consumerTokenServices.revokeToken(token.getValue());
+		consumerTokenServices.revokeToken(token.getValue());
 	}
 
 	@ExceptionHandler(InvalidTokenException.class)
