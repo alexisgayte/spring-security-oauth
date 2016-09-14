@@ -33,7 +33,6 @@ import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -64,8 +63,9 @@ public class RevokeTokenEndpoint {
 	}
 
 	@RequestMapping(value = "/oauth/revoke", method = RequestMethod.POST)
-	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	@ResponseStatus(value = HttpStatus.OK)
 	public void revokeToken(@RequestParam("token") final String value, 
+							@RequestParam(value = "token_hint", required = false) final String tokenHint,
 							Principal principal) {
 
 		if (!(principal instanceof OAuth2Authentication) 
@@ -87,20 +87,9 @@ public class RevokeTokenEndpoint {
 		consumerTokenServices.revokeToken(token.getValue());
 	}
 
-	@ExceptionHandler(InvalidTokenException.class)
-	public ResponseEntity<OAuth2Exception> handleException(Exception e) throws Exception {
-		logger.info("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage());
-		// This isn't an oauth resource, so we don't want to send an
-		// unauthorized code here. The client has already authenticated
-		// successfully with basic auth and should just
-		// get back the invalid token error.
-		@SuppressWarnings("serial")
-		InvalidTokenException e400 = new InvalidTokenException(e.getMessage()) {
-			@Override
-			public int getHttpErrorCode() {
-				return 400;
-			}
-		};
-		return exceptionTranslator.translate(e400);
-	}
+    @ExceptionHandler(OAuth2Exception.class)
+    public ResponseEntity<OAuth2Exception> handleException(Exception e) throws Exception {
+
+        return exceptionTranslator.translate(e);
+    }
 }

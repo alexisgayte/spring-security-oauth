@@ -102,13 +102,15 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	public SparklrServiceImpl sparklrService(@Value("${sparklrPhotoListURL}")
 	String sparklrPhotoListURL, @Value("${sparklrPhotoURLPattern}")
 	String sparklrPhotoURLPattern, @Value("${sparklrTrustedMessageURL}")
-	String sparklrTrustedMessageURL, @Qualifier("sparklrRestTemplate")
+	String sparklrTrustedMessageURL, @Value("${revokeTokenUri}")
+	String revokeTokenUri, @Qualifier("sparklrRestTemplate")
 	RestOperations sparklrRestTemplate, @Qualifier("trustedClientRestTemplate")
 	RestOperations trustedClientRestTemplate) {
 		SparklrServiceImpl sparklrService = new SparklrServiceImpl();
 		sparklrService.setSparklrPhotoListURL(sparklrPhotoListURL);
 		sparklrService.setSparklrPhotoURLPattern(sparklrPhotoURLPattern);
 		sparklrService.setSparklrTrustedMessageURL(sparklrTrustedMessageURL);
+		sparklrService.setRevokeTokenUri(revokeTokenUri);
 		sparklrService.setSparklrRestTemplate(sparklrRestTemplate);
 		sparklrService.setTrustedClientRestTemplate(trustedClientRestTemplate);
 		return sparklrService;
@@ -118,13 +120,15 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	public SparklrServiceImpl sparklrRedirectService(@Value("${sparklrPhotoListURL}")
 	String sparklrPhotoListURL, @Value("${sparklrPhotoURLPattern}")
 	String sparklrPhotoURLPattern, @Value("${sparklrTrustedMessageURL}")
-	String sparklrTrustedMessageURL, @Qualifier("sparklrRedirectRestTemplate")
+	String sparklrTrustedMessageURL, @Value("${revokeTokenUri}")
+	String revokeTokenUri, @Qualifier("sparklrRedirectRestTemplate")
 	RestOperations sparklrRestTemplate, @Qualifier("trustedClientRestTemplate")
 	RestOperations trustedClientRestTemplate) {
 		SparklrServiceImpl sparklrService = new SparklrServiceImpl();
 		sparklrService.setSparklrPhotoListURL(sparklrPhotoListURL);
 		sparklrService.setSparklrPhotoURLPattern(sparklrPhotoURLPattern);
 		sparklrService.setSparklrTrustedMessageURL(sparklrTrustedMessageURL);
+		sparklrService.setRevokeTokenUri(revokeTokenUri);
 		sparklrService.setSparklrRestTemplate(sparklrRestTemplate);
 		sparklrService.setTrustedClientRestTemplate(trustedClientRestTemplate);
 		return sparklrService;

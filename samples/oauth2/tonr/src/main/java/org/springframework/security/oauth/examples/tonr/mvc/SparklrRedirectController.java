@@ -2,6 +2,7 @@ package org.springframework.security.oauth.examples.tonr.mvc;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -67,6 +68,14 @@ public class SparklrRedirectController {
 
 	public void setSparklrService(SparklrService sparklrService) {
 		this.sparklrService = sparklrService;
+	}
+	
+	@RequestMapping("/sparklr/redirect/logout")
+	public String logout(Principal principal) throws Exception {
+		
+		sparklrService.revokeToken("");
+		
+		return "redirect:/logout";
 	}
 
 }

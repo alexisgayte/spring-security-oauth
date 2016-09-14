@@ -69,6 +69,8 @@ public final class AuthorizationServerSecurityConfigurer extends
 
 	private String checkTokenAccess = "denyAll()";
 
+	private String revokeTokenAccess = "denyAll()";
+	
 	private boolean sslOnly = false;
 
 	/**
@@ -117,6 +119,11 @@ public final class AuthorizationServerSecurityConfigurer extends
 		this.checkTokenAccess = checkTokenAccess;
 		return this;
 	}
+	
+	public AuthorizationServerSecurityConfigurer revokeTokenAccess(String revokeTokenAccess) {
+		this.revokeTokenAccess = revokeTokenAccess;
+		return this;
+	}
 
 	public String getTokenKeyAccess() {
 		return tokenKeyAccess;
@@ -126,6 +133,10 @@ public final class AuthorizationServerSecurityConfigurer extends
 		return checkTokenAccess;
 	}
 
+	public String getRevokeTokenAccess() {
+		return revokeTokenAccess;
+	}
+	
 	@Override
 	public void init(HttpSecurity http) throws Exception {
 
@@ -246,4 +257,5 @@ public final class AuthorizationServerSecurityConfigurer extends
 		Assert.notNull(filters, "Custom authentication filter list must not be null");
 		this.tokenEndpointAuthenticationFilters = new ArrayList<Filter>(filters);
 	}
+	
 }

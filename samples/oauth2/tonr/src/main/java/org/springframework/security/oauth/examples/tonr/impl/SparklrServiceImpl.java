@@ -13,6 +13,9 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.springframework.security.oauth.examples.tonr.SparklrException;
 import org.springframework.security.oauth.examples.tonr.SparklrService;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -25,6 +28,7 @@ public class SparklrServiceImpl implements SparklrService {
 
 	private String sparklrPhotoListURL;
 	private String sparklrTrustedMessageURL;
+	private String revokeTokenUri;
 	private String sparklrPhotoURLPattern;
 	private RestOperations sparklrRestTemplate;
 	private RestOperations trustedClientRestTemplate;
@@ -63,6 +67,21 @@ public class SparklrServiceImpl implements SparklrService {
 		return new ByteArrayInputStream(sparklrRestTemplate.getForObject(
 				URI.create(String.format(sparklrPhotoURLPattern, id)), byte[].class));
 	}
+	
+	public void revokeToken(String token) {
+		
+		MultiValueMap<String, Object> variablesMap = new LinkedMultiValueMap<String, Object>();
+		variablesMap.add("token", token);
+		
+		try {
+			this.trustedClientRestTemplate.postForObject(URI.create(revokeTokenUri),variablesMap ,String.class);
+		} catch (HttpClientErrorException ex){
+			ex.printStackTrace();
+		}
+		
+		this.sparklrRestTemplate.postForObject(URI.create(revokeTokenUri),variablesMap ,String.class);
+
+	}
 
 	public String getTrustedMessage() {
 		return this.trustedClientRestTemplate.getForObject(URI.create(sparklrTrustedMessageURL), String.class);
@@ -74,6 +93,10 @@ public class SparklrServiceImpl implements SparklrService {
 
 	public void setSparklrPhotoListURL(String sparklrPhotoListURL) {
 		this.sparklrPhotoListURL = sparklrPhotoListURL;
+	}
+	
+	public void setRevokeTokenUri(String revokeTokenUri) {
+		this.revokeTokenUri = revokeTokenUri;
 	}
 	
 	public void setSparklrTrustedMessageURL(String sparklrTrustedMessageURL) {

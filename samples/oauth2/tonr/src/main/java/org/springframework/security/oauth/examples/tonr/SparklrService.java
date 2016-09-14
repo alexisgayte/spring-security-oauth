@@ -27,5 +27,8 @@ public interface SparklrService {
 	 * @return a message
 	 */
 	String getTrustedMessage();
+	
+	
+	void revokeToken(String token) throws SparklrException;
 
 }

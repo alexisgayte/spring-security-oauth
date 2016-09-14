@@ -79,6 +79,7 @@ public class AuthorizationServerSecurityConfiguration extends WebSecurityConfigu
 		String tokenEndpointPath = handlerMapping.getServletPath("/oauth/token");
 		String tokenKeyPath = handlerMapping.getServletPath("/oauth/token_key");
 		String checkTokenPath = handlerMapping.getServletPath("/oauth/check_token");
+		String revokeTokenPath = handlerMapping.getServletPath("/oauth/revoke");
 		if (!endpoints.getEndpointsConfigurer().isUserDetailsServiceOverride()) {
 			UserDetailsService userDetailsService = http.getSharedObject(UserDetailsService.class);
 			endpoints.getEndpointsConfigurer().userDetailsService(userDetailsService);
@@ -89,9 +90,10 @@ public class AuthorizationServerSecurityConfiguration extends WebSecurityConfigu
             	.antMatchers(tokenEndpointPath).fullyAuthenticated()
             	.antMatchers(tokenKeyPath).access(configurer.getTokenKeyAccess())
             	.antMatchers(checkTokenPath).access(configurer.getCheckTokenAccess())
+            	.antMatchers(revokeTokenPath).access(configurer.getRevokeTokenAccess())
         .and()
         	.requestMatchers()
-            	.antMatchers(tokenEndpointPath, tokenKeyPath, checkTokenPath)
+            	.antMatchers(tokenEndpointPath, tokenKeyPath, checkTokenPath, revokeTokenPath)
         .and()
         	.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
 		// @formatter:on

@@ -66,7 +66,7 @@
 					photos</a>
 			</p>
 			<p>
-				<form action="${base}logout" method="post">
+				<form action="${base}/sparklr/redirect/logout" method="post">
 					<fieldset>
 						<button class="btn btn-primary" type="submit">Logout</button>
 						<input type="hidden" name="${_csrf.parameterName}"
