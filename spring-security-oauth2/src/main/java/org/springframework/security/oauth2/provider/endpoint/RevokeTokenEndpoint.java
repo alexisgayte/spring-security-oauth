@@ -67,11 +67,9 @@ public class RevokeTokenEndpoint {
 	@ResponseStatus(value = HttpStatus.OK)
 	public void revokeToken(@RequestParam("token") final String value, 
 							@RequestParam(value = "token_hint", required = false) final String tokenHint,
-							Principal principal) {
+							OAuth2Authentication authentication) {
 
-		if (!(principal instanceof OAuth2Authentication) 
-					|| !((OAuth2Authentication) principal).isAuthenticated() 
-					|| !((OAuth2Authentication) principal).isClientOnly()) {
+		if (!authentication.isAuthenticated() || !authentication.isClientOnly()) {
 			throw new InsufficientAuthenticationException(
 					"User must be authenticated with Spring Security before authorization can be completed.");
 		}
